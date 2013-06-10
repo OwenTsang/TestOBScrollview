@@ -34,18 +34,6 @@ public:
     
     void setScrollerBg(const char* bgFile);
     
-    GLubyte getOpacity()
-    {
-        if(m_sScroller)
-            m_sScroller->getOpacity();
-        return 0;
-    }
-    void setOpacity(GLubyte opacity)
-    {
-        if(m_sScroller)
-            m_sScroller->setOpacity(opacity);
-    }
-    
 private:
     void updateScrollerSize(const CCSize& scale);
     

@@ -146,27 +146,26 @@ CCNode* HelloWorld::createBothDirectionContainer(CCSize& viewSize)
 void HelloWorld::testBothDirectionScrollview()
 {
     CCSize viewSize;
-    CCNode* container = createBothDirectionContainer(viewSize);
-    OBScrollView* scrollView = OBScrollView::create(viewSize,container);
-    scrollView->setDirection(kOBScrollViewDirectionBoth);
-    scrollView->setDelegate(this);
+    CCNode* container = createBothDirectionContainer(viewSize); ///构造container
+    OBScrollView* scrollView = OBScrollView::create(viewSize,container);///构造OBScrollView
+    scrollView->setDirection(kOBScrollViewDirectionBoth);///设置方向为水平纵线都可以滚动
+    scrollView->setDelegate(this);///设置托管
     scrollView->setPosition( ccp(CCDirector::sharedDirector()->getWinSize().width / 4,
                                  CCDirector::sharedDirector()->getWinSize().height/ 6));
     this->addChild(scrollView);
-    scrollView->setContentOffset(ccp(0,scrollView->minContainerOffset().y));
+    scrollView->setContentOffset(ccp(0,scrollView->minContainerOffset().y));///设置默认显示左下角的内容
     
-    OBScroller* scroller = new OBScroller(kOBScrollViewDirectionVertical,CCSizeMake(verticalScrollerWidth, viewSize.height));
-    scroller->setSpriteScroller("scroller9.png",CCRectMake(0,0,20,40),CCRectMake(6, 6, 6, 6));
-    //    scroller->setSpriteScroller("Scroller.png");
-    scrollView->setScroller(scroller);
+    OBScroller* scroller = new OBScroller(kOBScrollViewDirectionVertical,CCSizeMake(verticalScrollerWidth, viewSize.height));///构造垂直的OBScroller
+    scroller->setSpriteScroller("scroller9.png",CCRectMake(0,0,20,40),CCRectMake(6, 6, 6, 6));///设置滚动小条CCScale9Sprite形式 
+    //    scroller->setSpriteScroller("Scroller.png");///设置滚动小条CCSprite形式 
+    scrollView->setScroller(scroller); ///将scroller放入scrollView的右端 
+    scroller->release();///
+    
+    scroller = new OBScroller(kOBScrollViewDirectionHorizontal,CCSizeMake(viewSize.width, horizontalScrollerHeight));///构造水平的OBScroller
+    scroller->setSpriteScroller("horizontalScroller9.png",CCRectMake(0,0,40,20),CCRectMake(6, 6, 6, 6));///设置滚动小条CCScale9Sprite形式 
+    //    scroller->setSpriteScroller("horizontalScroller.png");///设置滚动小条CCSprite形式 
+    scrollView->setScroller(scroller);///将scroller放入scrollView的底端
     scroller->release();
-    
-    scroller = new OBScroller(kOBScrollViewDirectionHorizontal,CCSizeMake(viewSize.width, horizontalScrollerHeight));
-    scroller->setSpriteScroller("horizontalScroller9.png",CCRectMake(0,0,40,20),CCRectMake(6, 6, 6, 6));
-    //    scroller->setSpriteScroller("horizontalScroller.png");
-    scrollView->setScroller(scroller);
-    scroller->release();
-    
 }
 
 

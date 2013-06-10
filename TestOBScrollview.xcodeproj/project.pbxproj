@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2178B1B617654C4F00C73DBD /* horizontalScroller.png in Resources */ = {isa = PBXBuildFile; fileRef = 2178B1B417654C4F00C73DBD /* horizontalScroller.png */; };
+		2178B1B717654C4F00C73DBD /* horizontalScroller9.png in Resources */ = {isa = PBXBuildFile; fileRef = 2178B1B517654C4F00C73DBD /* horizontalScroller9.png */; };
 		217EAB4417649AB1002FA39B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217EAB4317649AB1002FA39B /* QuartzCore.framework */; };
 		217EAB4617649AB1002FA39B /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217EAB4517649AB1002FA39B /* OpenGLES.framework */; };
 		217EAB4817649AB1002FA39B /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217EAB4717649AB1002FA39B /* OpenAL.framework */; };
@@ -220,9 +222,17 @@
 		217EAE1E17649AB5002FA39B /* cocos2dx-ext_public.defines.txt in Resources */ = {isa = PBXBuildFile; fileRef = 217EAE1D17649AB5002FA39B /* cocos2dx-ext_public.defines.txt */; };
 		217EAE2417649AB5002FA39B /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 217EAE2317649AB5002FA39B /* AppDelegate.cpp */; };
 		217EAE2717649AB5002FA39B /* HelloWorldScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 217EAE2617649AB5002FA39B /* HelloWorldScene.cpp */; };
+		217EAE3217649B24002FA39B /* OBScroller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 217EAE2E17649B24002FA39B /* OBScroller.cpp */; };
+		217EAE3317649B24002FA39B /* OBScrollView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 217EAE3017649B24002FA39B /* OBScrollView.cpp */; };
+		217EAE3817649F21002FA39B /* item.png in Resources */ = {isa = PBXBuildFile; fileRef = 217EAE3517649F21002FA39B /* item.png */; };
+		217EAE3917649F21002FA39B /* scroller.png in Resources */ = {isa = PBXBuildFile; fileRef = 217EAE3617649F21002FA39B /* scroller.png */; };
+		217EAE3A17649F21002FA39B /* scroller9.png in Resources */ = {isa = PBXBuildFile; fileRef = 217EAE3717649F21002FA39B /* scroller9.png */; };
+		217EAE3C1764B2AF002FA39B /* itemS.png in Resources */ = {isa = PBXBuildFile; fileRef = 217EAE3B1764B2AF002FA39B /* itemS.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2178B1B417654C4F00C73DBD /* horizontalScroller.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = horizontalScroller.png; sourceTree = "<group>"; };
+		2178B1B517654C4F00C73DBD /* horizontalScroller9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = horizontalScroller9.png; sourceTree = "<group>"; };
 		217EAB4017649AB1002FA39B /* TestOBScrollview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestOBScrollview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		217EAB4317649AB1002FA39B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		217EAB4517649AB1002FA39B /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -690,6 +700,14 @@
 		217EAE2317649AB5002FA39B /* AppDelegate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AppDelegate.cpp; path = Classes/AppDelegate.cpp; sourceTree = "<group>"; };
 		217EAE2517649AB5002FA39B /* HelloWorldScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HelloWorldScene.h; path = Classes/HelloWorldScene.h; sourceTree = "<group>"; };
 		217EAE2617649AB5002FA39B /* HelloWorldScene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = HelloWorldScene.cpp; path = Classes/HelloWorldScene.cpp; sourceTree = "<group>"; };
+		217EAE2E17649B24002FA39B /* OBScroller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OBScroller.cpp; sourceTree = "<group>"; };
+		217EAE2F17649B24002FA39B /* OBScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBScroller.h; sourceTree = "<group>"; };
+		217EAE3017649B24002FA39B /* OBScrollView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OBScrollView.cpp; sourceTree = "<group>"; };
+		217EAE3117649B24002FA39B /* OBScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBScrollView.h; sourceTree = "<group>"; };
+		217EAE3517649F21002FA39B /* item.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = item.png; sourceTree = "<group>"; };
+		217EAE3617649F21002FA39B /* scroller.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scroller.png; sourceTree = "<group>"; };
+		217EAE3717649F21002FA39B /* scroller9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scroller9.png; sourceTree = "<group>"; };
+		217EAE3B1764B2AF002FA39B /* itemS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = itemS.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -760,6 +778,7 @@
 		217EAB5417649AB1002FA39B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				217EAE3417649F21002FA39B /* TestOBResource */,
 				217EAB5517649AB1002FA39B /* CloseNormal.png */,
 				217EAB5717649AB1002FA39B /* CloseSelected.png */,
 				217EAB5917649AB1002FA39B /* Default.png */,
@@ -1690,12 +1709,39 @@
 		217EAE2117649AB5002FA39B /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				217EAE2D17649B24002FA39B /* OBScrollView */,
 				217EAE2217649AB5002FA39B /* AppDelegate.h */,
 				217EAE2317649AB5002FA39B /* AppDelegate.cpp */,
 				217EAE2517649AB5002FA39B /* HelloWorldScene.h */,
 				217EAE2617649AB5002FA39B /* HelloWorldScene.cpp */,
 			);
 			name = Classes;
+			sourceTree = "<group>";
+		};
+		217EAE2D17649B24002FA39B /* OBScrollView */ = {
+			isa = PBXGroup;
+			children = (
+				217EAE2E17649B24002FA39B /* OBScroller.cpp */,
+				217EAE2F17649B24002FA39B /* OBScroller.h */,
+				217EAE3017649B24002FA39B /* OBScrollView.cpp */,
+				217EAE3117649B24002FA39B /* OBScrollView.h */,
+			);
+			name = OBScrollView;
+			path = Classes/OBScrollView;
+			sourceTree = "<group>";
+		};
+		217EAE3417649F21002FA39B /* TestOBResource */ = {
+			isa = PBXGroup;
+			children = (
+				217EAE3517649F21002FA39B /* item.png */,
+				217EAE3B1764B2AF002FA39B /* itemS.png */,
+				2178B1B417654C4F00C73DBD /* horizontalScroller.png */,
+				2178B1B517654C4F00C73DBD /* horizontalScroller9.png */,
+				217EAE3617649F21002FA39B /* scroller.png */,
+				217EAE3717649F21002FA39B /* scroller9.png */,
+			);
+			name = TestOBResource;
+			path = Resources/TestOBResource;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1763,6 +1809,12 @@
 				217EAD7017649AB4002FA39B /* project.pbxproj in Resources */,
 				217EAE1C17649AB5002FA39B /* cocos2dx-ext.mkf in Resources */,
 				217EAE1E17649AB5002FA39B /* cocos2dx-ext_public.defines.txt in Resources */,
+				217EAE3817649F21002FA39B /* item.png in Resources */,
+				217EAE3917649F21002FA39B /* scroller.png in Resources */,
+				217EAE3A17649F21002FA39B /* scroller9.png in Resources */,
+				217EAE3C1764B2AF002FA39B /* itemS.png in Resources */,
+				2178B1B617654C4F00C73DBD /* horizontalScroller.png in Resources */,
+				2178B1B717654C4F00C73DBD /* horizontalScroller9.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1961,6 +2013,8 @@
 				217EAE1817649AB5002FA39B /* CCPhysicsSprite.cpp in Sources */,
 				217EAE2417649AB5002FA39B /* AppDelegate.cpp in Sources */,
 				217EAE2717649AB5002FA39B /* HelloWorldScene.cpp in Sources */,
+				217EAE3217649B24002FA39B /* OBScroller.cpp in Sources */,
+				217EAE3317649B24002FA39B /* OBScrollView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2094,6 +2148,7 @@
 				217EAE2C17649AB5002FA39B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
