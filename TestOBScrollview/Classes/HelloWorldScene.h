@@ -2,8 +2,12 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "OBScrollView/OBScrollView.h"
 
-class HelloWorld : public cocos2d::CCLayer
+using namespace cocos2d::extension;
+
+class HelloWorld : public cocos2d::CCLayer,
+                   public OBScrollViewDelegate
 {
 public:
     // Method 'init' in cocos2d-x returns bool, instead of 'id' in cocos2d-iphone (an object pointer)
@@ -17,6 +21,15 @@ public:
 
     // preprocessor macro for "static create()" constructor ( node() deprecated )
     CREATE_FUNC(HelloWorld);
+    
+public:
+    virtual void scrollViewDidScroll(OBScrollView* view) {};
+    virtual void scrollViewDidZoom(OBScrollView* view) {};
+    virtual void scrollViewDidClick(CCNode* clickNode);
+
+private:    
+    CCNode* createBothDirectionContainer(cocos2d::CCSize& viewSize);
+    void testBothDirectionScrollview();
 };
 
 #endif // __HELLOWORLD_SCENE_H__

@@ -2,6 +2,7 @@
 #include "SimpleAudioEngine.h"
 
 using namespace cocos2d;
+using namespace cocos2d::extension;
 using namespace CocosDenshion;
 
 CCScene* HelloWorld::scene()
@@ -71,6 +72,8 @@ bool HelloWorld::init()
     // add the sprite as a child to this layer
     this->addChild(pSprite, 0);
     
+    testBothDirectionScrollview();
+    
     return true;
 }
 
@@ -82,3 +85,102 @@ void HelloWorld::menuCloseCallback(CCObject* pSender)
     exit(0);
 #endif
 }
+
+#define verticalScrollerWidth  20 
+#define horizontalScrollerHeight  20 
+CCNode* HelloWorld::createBothDirectionContainer(CCSize& viewSize)
+{
+    CCTexture2D* texture = CCTextureCache::sharedTextureCache()->addImage("item.png");
+    CCSize itemSize = texture->getContentSize();
+    CCSize itemSizeWithMargin = CCSizeMake((int)(itemSize.width*9/8), (int)(itemSize.height*9/8));
+    
+    const int row = 8;
+    const int column = 8;
+    
+    CCNode* container = CCNode::create();
+    CCSize containerSize = CCSizeMake(column*itemSizeWithMargin.width+verticalScrollerWidth,
+                                      row*itemSizeWithMargin.height+horizontalScrollerHeight);
+    container->setContentSize(containerSize);
+    
+    CCSprite* item = NULL;
+    CCLabelTTF* lable = NULL;
+    int posX = 0;
+    int posY = horizontalScrollerHeight + itemSizeWithMargin.height;
+    
+    char text[64] = {0};
+    int tag = 0;
+    for(int i = 0; i< column; ++i)
+    {
+        for (int j = 0; j < row; ++j)
+        {
+            tag = i*row +j+1;
+            item = new CCSprite();
+            item->initWithTexture(texture);
+            item->setAnchorPoint(ccp(0, 1));
+            item->setPosition(ccp(posX, posY));
+            container->addChild(item,2,tag);
+            
+            sprintf(text, "%d",tag);
+            lable = new CCLabelTTF();
+            lable->initWithString(text, "Thonburi", 20);
+            lable->setColor(ccBLACK);
+            lable->setAnchorPoint(ccp(0.5f,0.5f));
+            lable->setPosition(ccp(itemSize.width/2, itemSize.height/2));
+            item->addChild(lable);
+            
+            lable->release();
+            item->release();
+            
+            posY += itemSizeWithMargin.height;
+        }
+        
+        posY = horizontalScrollerHeight + itemSizeWithMargin.height;
+        posX += itemSizeWithMargin.width;
+    }
+    
+    viewSize = CCSizeMake(4*itemSizeWithMargin.width + verticalScrollerWidth, 4*itemSizeWithMargin.height + horizontalScrollerHeight);
+    return container;
+    
+}
+
+void HelloWorld::testBothDirectionScrollview()
+{
+    CCSize viewSize;
+    CCNode* container = createBothDirectionContainer(viewSize);
+    OBScrollView* scrollView = OBScrollView::create(viewSize,container);
+    scrollView->setDirection(kOBScrollViewDirectionBoth);
+    scrollView->setDelegate(this);
+    scrollView->setPosition( ccp(CCDirector::sharedDirector()->getWinSize().width / 4,
+                                 CCDirector::sharedDirector()->getWinSize().height/ 6));
+    this->addChild(scrollView);
+    scrollView->setContentOffset(ccp(0,scrollView->minContainerOffset().y));
+    
+    OBScroller* scroller = new OBScroller(kOBScrollViewDirectionVertical,CCSizeMake(verticalScrollerWidth, viewSize.height));
+    scroller->setSpriteScroller("scroller9.png",CCRectMake(0,0,20,40),CCRectMake(6, 6, 6, 6));
+    //    scroller->setSpriteScroller("Scroller.png");
+    scrollView->setScroller(scroller);
+    scroller->release();
+    
+    scroller = new OBScroller(kOBScrollViewDirectionHorizontal,CCSizeMake(viewSize.width, horizontalScrollerHeight));
+    scroller->setSpriteScroller("horizontalScroller9.png",CCRectMake(0,0,40,20),CCRectMake(6, 6, 6, 6));
+    //    scroller->setSpriteScroller("horizontalScroller.png");
+    scrollView->setScroller(scroller);
+    scroller->release();
+    
+}
+
+
+void HelloWorld::scrollViewDidClick(CCNode* clickNode)
+{
+    CCLOG("click node id = %d",clickNode->getTag());
+    CCTexture2D* texture1 = CCTextureCache::sharedTextureCache()->addImage("item.png");
+    CCTexture2D* texture2 = CCTextureCache::sharedTextureCache()->addImage("itemS.png");
+    CCSprite* item = (CCSprite*)clickNode;
+    if (item->getTexture() == texture1) {
+        item->setTexture(texture2);
+    }
+    else{
+        item->setTexture(texture1);
+    }    
+}
+
