@@ -856,7 +856,7 @@ float OBScrollView::judgeInertiaWhenTouchEnded()
                 float durationRate = OB_INERTRA_DURATION_RATE;
                 if (offset.x < minOffset.x || offset.y < minOffset.y
                     || offset.x > maxOffset.x || offset.y > maxOffset.y) { /////bounce happened
-                    durationRate = OB_INERTRA_DURATION_RATE/3;
+                    durationRate = OB_INERTRA_DURATION_RATE/2;
                 }
                 
                 inertiaDuration = durationRate*MAX(fabsf(v.x)/OB_ACCELERATION,fabsf(v.y)/OB_ACCELERATION);
