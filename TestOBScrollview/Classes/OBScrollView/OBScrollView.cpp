@@ -33,11 +33,6 @@ NS_CC_EXT_BEGIN
 #define INSET_RATIO          0.2f
 #define MOVE_INCH            7.0f/160.0f
 
-/////added By OwenTsang
-#define  OB_ACCELERATION   5600
-#define  OB_GET_SYMBOL(x)  (x >= 0.0 ? 1.0 : -1.0)
-#define  OB_INERTRA_DURATION_RATE   1.5f
-
 static float convertDistanceFromPointToInch(float pointDis)
 {
     float factor = ( CCEGLView::sharedOpenGLView()->getScaleX() + CCEGLView::sharedOpenGLView()->getScaleY() ) / 2;
@@ -60,9 +55,6 @@ OBScrollView::OBScrollView()
 , m_pTouches(NULL)
 , m_fMinScale(0.0f)
 , m_fMaxScale(0.0f)
-, m_bInertiaable(true)
-, m_beginPosition(CCPointZero)
-, m_eScrollingType(kScrollingNone)
 , m_horizontalScroller(NULL)
 , m_verticalScroller(NULL)
 {
@@ -117,6 +109,7 @@ bool OBScrollView::initWithViewSize(CCSize size, CCNode *container/* = NULL*/)
 
         this->setViewSize(size);
 
+
         setTouchPriority(kOBScrollViewHandlerPriority);
         setTouchEnabled(true);
         m_pTouches = new CCArray();
@@ -128,10 +121,9 @@ bool OBScrollView::initWithViewSize(CCSize size, CCNode *container/* = NULL*/)
         m_fTouchLength = 0.0f;
         
         /////added by owen 
-        m_bInertiaable = true;
-        m_eScrollingType = kScrollingNone;
         m_horizontalScroller = NULL;
         m_verticalScroller = NULL;
+        this->updateInset();
 
         this->addChild(m_pContainer);
         m_fMinScale = m_fMaxScale = 1.0f;
@@ -221,7 +213,7 @@ void OBScrollView::setContentOffset(CCPoint offset, bool animated/* = false*/)
 {
     if (animated)
     { //animate scrolling
-        this->setContentOffsetInDuration(offset, BOUNCE_DURATION,kScrollingBounce);
+        this->setContentOffsetInDuration(offset, BOUNCE_DURATION);
     }
     else
     { //set the container position directly
@@ -245,28 +237,9 @@ void OBScrollView::setContentOffset(CCPoint offset, bool animated/* = false*/)
     }
 }
 
-void OBScrollView::stopByTouchEnd()
-{
-    if (m_eScrollingType == kScrollingInteria) {
-        if (m_verticalScroller) {
-            m_verticalScroller->m_sScroller->stopAllActions();
-        }
-        if (m_horizontalScroller) {
-            m_horizontalScroller->m_sScroller->stopAllActions();
-        }
-        if (m_pContainer) {
-            m_pContainer->stopAllActions();
-            stoppedAnimatedScroll(m_pContainer);
-        }
-        
-        this->schedule(schedule_selector(OBScrollView::deaccelerateScrolling));   
-    }
-}
 
-void OBScrollView::setContentOffsetInDuration(CCPoint offset, float dt,EScrollingType scrollingType)
+void OBScrollView::setContentOffsetInDuration(CCPoint offset, float dt)
 {
-    m_eScrollingType = scrollingType;
-    
     CCFiniteTimeAction *scroll, *expire;
     
 //    scroll = CCMoveTo::create(dt, offset);
@@ -429,7 +402,7 @@ void OBScrollView::deaccelerateScrolling(float dt)
     CCPoint maxInset, minInset;
     
     m_pContainer->setPosition(ccpAdd(m_pContainer->getPosition(), m_tScrollDistance));
-
+    
     if (m_bBounceable)
     {
         maxInset = m_fMaxInset;
@@ -454,6 +427,11 @@ void OBScrollView::deaccelerateScrolling(float dt)
     m_tScrollDistance     = ccpMult(m_tScrollDistance, SCROLL_DEACCEL_RATE);
     this->setContentOffset(ccp(newX,newY));
     
+    CCLog("newX = %f,newY = %f,m_tScrollDistance = (%f, %f),maxInset = (%f, %f),minInset = (%f, %f),",
+          newX,newY,m_tScrollDistance.x,m_tScrollDistance.y,
+          maxInset.x,maxInset.y,
+          minInset.x,minInset.y);
+    
     if ((fabsf(m_tScrollDistance.x) <= SCROLL_DEACCEL_DIST &&
          fabsf(m_tScrollDistance.y) <= SCROLL_DEACCEL_DIST) ||
         newY > maxInset.y || newY < minInset.y ||
@@ -468,7 +446,6 @@ void OBScrollView::deaccelerateScrolling(float dt)
 
 void OBScrollView::stoppedAnimatedScroll(CCNode * node)
 {
-    m_eScrollingType = kScrollingNone;
     this->unschedule(schedule_selector(OBScrollView::performedAnimatedScroll));
     // After the animation stopped, "scrollViewDidScroll" should be invoked, this could fix the bug of lack of tableview cells.
     if (m_pDelegate != NULL)
@@ -650,10 +627,6 @@ bool OBScrollView::ccTouchBegan(CCTouch* touch, CCEvent* event)
         return false;
     }
     
-    if (m_eScrollingType != kScrollingNone) {
-        return true;
-    }
-
     if (!m_pTouches->containsObject(touch))
     {
         m_pTouches->addObject(touch);
@@ -675,10 +648,6 @@ bool OBScrollView::ccTouchBegan(CCTouch* touch, CCEvent* event)
                                    m_pContainer->convertTouchToNodeSpace((CCTouch*)m_pTouches->objectAtIndex(1)));
         m_bDragging  = false;
     }
-    if (m_bInertiaable) {
-        m_beginPosition = m_pContainer->getPosition();
-        CCTime::gettimeofdayCocos2d(&m_beginTime, NULL);
-    }
     return true;
 }
 
@@ -686,9 +655,6 @@ void OBScrollView::ccTouchMoved(CCTouch* touch, CCEvent* event)
 {
     if (!this->isVisible())
     {
-        return;
-    }
-    if (m_eScrollingType != kScrollingNone) {
         return;
     }
 
@@ -772,21 +738,15 @@ void OBScrollView::ccTouchEnded(CCTouch* touch, CCEvent* event)
     {
         return;
     }
-    if (m_eScrollingType != kScrollingNone) {
-        stopByTouchEnd();
-        return;
-    }
     
     if (m_pTouches->containsObject(touch))
     {
         if (m_pTouches->count() == 1)
         {
-            if (m_bTouchMoved) {
-                float intertraDuration = judgeInertiaWhenTouchEnded();
-                this->schedule(schedule_selector(OBScrollView::deaccelerateScrolling),0.0,kCCRepeatForever,intertraDuration);   
+            if (m_bTouchMoved){
+                this->schedule(schedule_selector(OBScrollView::deaccelerateScrolling));
             }
-            else
-            {
+            else{
                 if (m_pDelegate) {
                     nodeDidClick(m_pContainer->convertTouchToNodeSpace(touch));
                 }
@@ -802,70 +762,6 @@ void OBScrollView::ccTouchEnded(CCTouch* touch, CCEvent* event)
     }
 }
 
-
-
-float OBScrollView::judgeInertiaWhenTouchEnded()
-{
-    if (! m_bInertiaable) {
-        return 0.0f;
-    }
-    float inertiaDuration = 0.0f;
-
-    CCPoint curPosition = m_pContainer->getPosition();
-    CCPoint minOffset = minContainerOffset();
-    CCPoint maxOffset = maxContainerOffset();
-    
-    ////check edge
-    if ( curPosition.x < minOffset.x || curPosition.x > maxOffset.x
-      || curPosition.y < minOffset.y || curPosition.y > maxOffset.y) {
-        return inertiaDuration;
-    }
-    
-    CCPoint delta = ccpSub(m_pContainer->getPosition(), m_beginPosition);
-    if (m_eDirection == kOBScrollViewDirectionHorizontal)
-    {
-        delta.y = 0.0f;
-    }
-    else if (m_eDirection == kOBScrollViewDirectionVertical)
-    {
-        delta.x = 0.0f;
-    }
-    
-    if (fabsf(delta.x) > 20.f || fabsf(delta.y) > 20.0f ) /////check position delta
-    {
-        cc_timeval end;
-        CCTime::gettimeofdayCocos2d(&end, NULL);
-        float duration = CCTime::timersubCocos2d(&m_beginTime, &end)/1000.0;
-
-        if (duration > 0.05f) ////check time
-        {
-            CCPoint v = ccp(2*delta.x/duration, 2*delta.y/duration);
-            if (fabsf(v.x) > 1000.0f || fabsf(v.y) >1000.0f) {  ////check speed
-                
-                CCPoint deltaOffset = ccp(OB_GET_SYMBOL(delta.x)*(v.x*v.x/(2*OB_ACCELERATION)),
-                                          OB_GET_SYMBOL(delta.y)*(v.y*v.y/(2*OB_ACCELERATION)));
-                
-                CCPoint offset = ccpAdd(m_pContainer->getPosition(),deltaOffset);
-                
-                offset.x = MAX(offset.x, minOffset.x - m_tViewSize.width/2);
-                offset.y = MAX(offset.y, minOffset.y - m_tViewSize.height/2);
-                
-                offset.x = MIN(offset.x, maxOffset.x + m_tViewSize.width/2);
-                offset.y = MIN(offset.y, maxOffset.y + m_tViewSize.height/2);
-                
-                float durationRate = OB_INERTRA_DURATION_RATE;
-                if (offset.x < minOffset.x || offset.y < minOffset.y
-                    || offset.x > maxOffset.x || offset.y > maxOffset.y) { /////bounce happened
-                    durationRate = OB_INERTRA_DURATION_RATE/2;
-                }
-                
-                inertiaDuration = durationRate*MAX(fabsf(v.x)/OB_ACCELERATION,fabsf(v.y)/OB_ACCELERATION);
-                setContentOffsetInDuration(offset, inertiaDuration,kScrollingInteria);
-            }
-        }
-    }
-    return inertiaDuration;
-}
 
 void OBScrollView::nodeDidClick(const CCPoint& clickPos)
 {

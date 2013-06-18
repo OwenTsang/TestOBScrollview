@@ -28,12 +28,6 @@ enum {
     kOBScrollViewHandlerPriority = kCCMenuHandlerPriority-1,
 };
 
-enum EScrollingType
-{
-    kScrollingNone = 0,
-    kScrollingInteria = 1,   ////when scrolling in Interia, can be stoped immediately 
-    kScrollingBounce = 2,    ////when scrolling in Bounce, can't be stoped
-};
 /**
  * ScrollView support for cocos2d for iphone.
  * It provides scroll view functionalities to cocos2d projects natively.
@@ -90,9 +84,8 @@ public:
      *
      * @param offset new offset
      * @param animation duration
-     * @param scrollingType
      */
-    void setContentOffsetInDuration(CCPoint offset, float dt,EScrollingType scrollingType = kScrollingBounce);
+    void setContentOffsetInDuration(CCPoint offset, float dt);
 
     void setZoomScale(float s);
     /**
@@ -140,10 +133,6 @@ public:
     bool isTouchMoved() { return m_bTouchMoved; }
     bool isBounceable() { return m_bBounceable; }
     void setBounceable(bool bBounceable) { m_bBounceable = bBounceable; }
-    
-    ///added by owen 
-    bool isInertiaable() { return m_bInertiaable; }
-    void setInertiaable(bool bInertiaable) { m_bInertiaable = bInertiaable; }
     
     void setScroller(OBScroller* scroller);
     
@@ -229,15 +218,12 @@ private:
     /*
      * add by owen
      */
-    float judgeInertiaWhenTouchEnded();
     
     void nodeDidClick(const CCPoint& clickPos);
     
     void updateScrollerSize(OBScroller* scroller);
     
     void updateScrollerPosition(OBScroller* scroller,const CCPoint& targetPos,float duration = 0.0f);
-    
-    void stopByTouchEnd();
 
 protected:
     CCRect getViewRect();
@@ -321,29 +307,8 @@ protected:
     float m_fMinScale, m_fMaxScale;
     
     /*
-     * all below added by owen 
+     * all below added by owen
      */
-
-    /**
-     * If YES, the view is enable to inertia.
-     */
-    bool m_bInertiaable;
-    
-    /*
-     * container's position when touched began
-     */
-    CCPoint m_beginPosition;
-    
-    /*
-     * the time when touched began
-     */
-    cc_timeval m_beginTime;
-    
-    /**
-     * If YES, the view is scrolling Now.
-     */
-    EScrollingType  m_eScrollingType;
-    
     OBScroller* m_horizontalScroller;
     
     OBScroller* m_verticalScroller;
